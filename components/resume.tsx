@@ -1,29 +1,37 @@
 'use client'
 
-import React, { useRef } from "react"
-import Image from "next/image"
+import React, { useRef, useEffect } from "react"
 import jsPDF from "jspdf"
 import html2canvas from "html2canvas"
 
 const Resume = () => {
   const resumeRef = useRef<HTMLDivElement>(null)
 
-  // ✅ PDF Generate on Download
+  // ✅ PDF Generate
   const generatePDF = async () => {
-    if (resumeRef.current) {
-      const canvas = await html2canvas(resumeRef.current, {
-        scale: 2,
-        useCORS: true,
-      })
-      const imgData = canvas.toDataURL("image/png")
-      const pdf = new jsPDF("p", "mm", "a4")
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+    if (!resumeRef.current) return
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
-      pdf.save("Manas_Kumar_Resume.pdf")
-    }
+    window.scrollTo(0, 0)
+    const canvas = await html2canvas(resumeRef.current, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    })
+
+    const imgData = canvas.toDataURL("image/png")
+    const pdf = new jsPDF("p", "mm", "a4")
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
+    pdf.save("Manas_Kumar_Resume.pdf")
   }
+
+  // ✅ Page load hone ke baad auto download
+  useEffect(() => {
+    const timer = setTimeout(() => generatePDF(), 1000) // 1 sec delay
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <section className="w-full max-w-screen-xl mx-auto px-4 py-10 flex justify-center">
@@ -33,7 +41,7 @@ const Resume = () => {
                    border border-white/30 backdrop-blur-xl overflow-hidden"
         style={{
           width: "100%",
-          maxWidth: "900px", // match main layout width
+          maxWidth: "900px", // A4 width
           aspectRatio: "210/297", // A4 ratio
         }}
       >
@@ -49,14 +57,11 @@ const Resume = () => {
             <div className="relative group">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 blur-md opacity-60 group-hover:opacity-100 transition" />
               <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                <Image
+                <img
                   src="/images/photo.jpeg"
                   alt="Manas Kumar"
-                  width={160}
-                  height={160}
-                  priority
-                  unoptimized
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                  crossOrigin="anonymous"
                 />
               </div>
             </div>
@@ -83,15 +88,6 @@ const Resume = () => {
               </div>
             </div>
           </div>
-
-          {/* Download CV Button */}
-          <button
-            onClick={generatePDF}
-            className="px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold 
-                       rounded-full shadow-lg hover:scale-105 transition"
-          >
-            Download CV
-          </button>
         </div>
 
         {/* Contact Info */}
@@ -107,9 +103,9 @@ const Resume = () => {
               className="flex items-center gap-3 bg-gradient-to-r from-gray-50 to-gray-100 p-3 rounded-xl shadow hover:shadow-md transition"
             >
               <i className={`${item.icon} text-xl`} />
-              <div>
+              <div className="w-full">
                 <span className="text-xs font-semibold text-gray-500">{item.label}</span>
-                <p className="text-sm font-medium text-gray-700">{item.value}</p>
+                <p className="text-sm font-medium text-gray-700 break-words">{item.value}</p>
               </div>
             </div>
           ))}
