@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI as string;
-
-if (!MONGO_URI) {
-  throw new Error("❌ Please add MONGO_URI to your .env.local file");
-}
-
-// Maintain a cached connection
 let isConnected = false;
 
 export const connectDB = async () => {
   if (isConnected) return;
+
+  const MONGO_URI = process.env.MONGO_URI;
+  
+  if (!MONGO_URI) {
+    console.warn("⚠️ MONGO_URI is not defined at runtime. Skipping DB connection.");
+    return;
+  }
 
   try {
     const db = await mongoose.connect(MONGO_URI);
