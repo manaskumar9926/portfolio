@@ -1,8 +1,6 @@
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { connectDB } from "@/lib/db";
-import Contact from "@/models/contact";
 
 export async function POST(req: Request) {
   try {
@@ -15,11 +13,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1️⃣ Connect DB and Save
-    await connectDB();
-    await Contact.create({ name, email, message });
-
-    // 2️⃣ Nodemailer Setup
+    // ✅ Nodemailer Setup
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -28,7 +22,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // 3️⃣ Email to YOU
+    // ✅ Email to YOU
     await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
@@ -44,7 +38,7 @@ export async function POST(req: Request) {
       `,
     });
 
-    // 4️⃣ Auto Reply to User
+    // ✅ Auto Reply to User
     await transporter.sendMail({
       from: `"Manas Kumar" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -85,7 +79,7 @@ export async function POST(req: Request) {
       message: "Message sent & reply emailed!",
     });
   } catch (error) {
-    console.error("Contact API Error:", error); // ✅ ESLint error solved
+    console.error("Contact API Error:", error);
     return NextResponse.json(
       { success: false, message: "Server Error" },
       { status: 500 }
