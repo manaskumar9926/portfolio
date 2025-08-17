@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { message } from "antd";
+import { motion } from "framer-motion";
 import "@ant-design/v5-patch-for-react-19";
 
 // ✅ Form Validation Schema
@@ -82,88 +83,98 @@ const Contact = () => {
   };
 
   return (
-    <section className="w-full max-w-screen-xl mx-auto px-4 my-12 relative flex justify-center">
-      {/* Background Blur Circles */}
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-blue-500/10 blur-3xl -top-20 -right-32" />
-      <div className="absolute w-[300px] h-[300px] rounded-full bg-purple-500/10 blur-3xl bottom-0 -left-32" />
-
-      {/* Contact Card */}
-      <div className="relative w-full max-w-3xl bg-white/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] transition p-6 md:p-10">
-        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
-          <span ref={typedRef}></span>
-        </h2>
-        <p className="text-center text-gray-500 mb-8 text-sm md:text-base">
-          Feel free to drop a message. I’ll get back to you as soon as possible.
-        </p>
-
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-purple-100 p-6 rounded-3xl">
+      {/* Rounded big background */}
+      <div className="w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative w-full bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/30 p-6 md:p-10"
         >
-          {/* Full Name */}
-          <div className="col-span-1">
-            <Input
-              placeholder="Full Name"
-              className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
-              {...register("fullname")}
-            />
-            {errors.fullname && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.fullname.message}
-              </p>
-            )}
-          </div>
+          {/* Background Blur Circles */}
+          <div className="absolute w-[400px] h-[400px] rounded-full bg-blue-500/10 blur-3xl -top-20 -right-32" />
+          <div className="absolute w-[300px] h-[300px] rounded-full bg-purple-500/10 blur-3xl bottom-0 -left-32" />
 
-          {/* Email */}
-          <div className="col-span-1">
-            <Input
-              type="email"
-              placeholder="Email Address"
-              className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
-              {...register("email")}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
+          {/* Contact Card (same as your code) */}
+          <div className="relative w-full max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
+              <span ref={typedRef}></span>
+            </h2>
+            <p className="text-center text-gray-500 mb-8 text-sm md:text-base">
+              Feel free to drop a message. I’ll get back to you as soon as possible.
+            </p>
 
-          {/* Message */}
-          <div className="col-span-1 md:col-span-2">
-            <Textarea
-              placeholder="Your message..."
-              rows={6}
-              className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
-              {...register("message")}
-            />
-            {errors.message && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.message.message}
-              </p>
-            )}
-          </div>
-
-          {/* Submit */}
-          <div className="col-span-1 md:col-span-2 flex justify-center">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="relative w-full md:w-auto px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Sending...
-                </div>
-              ) : (
-                "Send Message"
-              )}
-            </Button>
+              {/* Full Name */}
+              <div className="col-span-1">
+                <Input
+                  placeholder="Full Name"
+                  className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
+                  {...register("fullname")}
+                />
+                {errors.fullname && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.fullname.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div className="col-span-1">
+                <Input
+                  type="email"
+                  placeholder="Email Address"
+                  className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Message */}
+              <div className="col-span-1 md:col-span-2">
+                <Textarea
+                  placeholder="Your message..."
+                  rows={6}
+                  className="bg-white/80 border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-400"
+                  {...register("message")}
+                />
+                {errors.message && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.message.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit */}
+              <div className="col-span-1 md:col-span-2 flex justify-center">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="relative w-full md:w-auto px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition"
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </div>
+                  ) : (
+                    "Send Message"
+                  )}
+                </Button>
+              </div>
+            </form>
           </div>
-        </form>
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
 };
 

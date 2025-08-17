@@ -94,12 +94,12 @@ const MainLayout: FC<ChildrenInterface> = ({ children }) => {
             {[
               {
                 label: 'EMAIL',
-                value: 'kumarmanas2001@gmail.com',
+                value: 'manastechsunset@gmail.com',
                 icon: 'ri-mail-line text-blue-500',
               },
               {
                 label: 'PHONE',
-                value: '+91 7294947294',
+                value: '+91 9199402676',
                 icon: 'ri-phone-line text-green-500',
               },
               {
