@@ -13,12 +13,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Nodemailer Setup
+    // ✅ Debugging for Vercel Logs
+    console.log("EMAIL_USER:", process.env.EMAIL_USER ? "Loaded" : "Missing");
+    console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
+
+    // ✅ Nodemailer SMTP Transporter (More reliable than "service: gmail")
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // true for 465, false for 587
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false, // avoid TLS errors on Vercel
       },
     });
 
@@ -78,11 +87,19 @@ export async function POST(req: Request) {
       success: true,
       message: "Message sent & reply emailed!",
     });
-  } catch (error) {
-    console.error("Contact API Error:", error);
-    return NextResponse.json(
-      { success: false, message: "Server Error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Contact API Error:", error.message, error);
+      return NextResponse.json(
+        { success: false, message: "Server Error", details: error.message },
+        { status: 500 }
+      );
+    } else {
+      console.error("Unknown Contact API Error:", error);
+      return NextResponse.json(
+        { success: false, message: "Server Error", details: "Unknown error" },
+        { status: 500 }
+      );
+    }
   }
 }
